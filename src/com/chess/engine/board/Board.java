@@ -12,6 +12,7 @@ import com.chess.engine.player.WhitePlayer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.chess.engine.pieces.PieceFactory;
 
 public final class Board {
 
@@ -152,12 +153,14 @@ public final class Board {
         return STANDARD_BOARD;
     }
 
+
+
     private static Board createStandardBoardImpl() {
         final Builder builder = new Builder();
         // Black Layout
-        builder.setPiece(PieceUtils.INSTANCE.getRook(Alliance.BLACK, 0, false));
-        builder.setPiece(PieceUtils.INSTANCE.getKnight(Alliance.BLACK, 1, false));
-        builder.setPiece(PieceUtils.INSTANCE.getBishop(Alliance.BLACK, 2, false));
+        builder.setPiece(PieceFactory.getInstance().createPiece("ROOK", Alliance.BLACK, 0, false));
+        builder.setPiece(PieceFactory.getInstance().createPiece("KNIGHT", Alliance.BLACK, 1, false));
+        builder.setPiece(PieceFactory.getInstance().createPiece("BISHOP", Alliance.BLACK, 2, false));
         builder.setPiece(PieceUtils.INSTANCE.getQueen(Alliance.BLACK, 3, false));
         builder.setPiece(new King(Alliance.BLACK, 4, true, true));
         builder.setPiece(PieceUtils.INSTANCE.getBishop(Alliance.BLACK, 5, false));
