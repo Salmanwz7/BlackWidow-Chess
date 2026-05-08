@@ -1,5 +1,8 @@
 package com.chess.gui;
 
+import com.chess.engine.player.ai.LoggingMoveStrategy;
+import com.chess.engine.player.ai.MoveStrategy;
+
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
@@ -132,10 +135,14 @@ public final class Table {
     }
 
     public void show() {
-        Table.get().getGameHistoryPanel().redo(this.chessBoard, Table.get().getMoveLog());
-        Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
+        final ChessGameFacade facade = new ChessGameFacade(
+                this.gameHistoryPanel,
+                this.takenPiecesPanel,
+                this.debugPanel,
+                this.moveLog
+        );
+        facade.refreshDisplay(this.chessBoard);
         Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
-        Table.get().getDebugPanel().redo();
     }
 
     // Event handling method
@@ -542,9 +549,9 @@ public final class Table {
             }
             else {
                 final BlackWidowAI strategy = new BlackWidowAI(Table.get().getGameSetup().getSearchDepth(), true, 0, false);
-                // Add AI progress listener to the strategy
                 strategy.addAIProgressListener(eventManager::publishAIProgress);
-                bestMove = strategy.execute(Table.get().getGameBoard());
+                final MoveStrategy loggedStrategy = new LoggingMoveStrategy(strategy);
+                bestMove = loggedStrategy.execute(Table.get().getGameBoard());
             }
             return bestMove;
         }
